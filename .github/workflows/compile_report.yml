@@ -23,7 +23,7 @@ jobs:
 
       - uses: docker://pandoc/latex:3.5
         with:
-          args: --output=README.pdf README.md --filter pandoc-plantuml-filter  
+          args: --output=README.pdf README.md --filter pandoc-plantuml
           
       - uses: actions/upload-artifact@v4
         with:
