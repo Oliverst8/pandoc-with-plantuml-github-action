@@ -1,0 +1,32 @@
+name: Compile report to pdf 
+
+on:
+  push:
+    paths:
+      - docs/**
+  workflow_dispatch:
+
+
+jobs:
+  convert_via_pandoc:
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y default-jre graphviz
+          curl -L -o plantuml.jar https://github.com/plantuml/plantuml/releases/latest/download/plantuml.jar
+          python3 -m pip install --upgrade pip
+          pip install pandoc-plantuml-filter
+
+      - uses: docker://pandoc/latex:3.5
+        with:
+          args: --output=README.pdf README.md --filter pandoc-plantuml-filter  
+          
+      - uses: actions/upload-artifact@v4
+        with:
+          name: report.pdf
+          path: docs/report.pdf
+
